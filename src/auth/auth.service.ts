@@ -32,7 +32,6 @@ export class AuthService {
   async login(pequeñoProductor: any) {
     const { correo, idPequeñosProductores } = pequeñoProductor;
     const payload = { correo, idPequeñosProductores };
-    console.log(process.env.SECRETOR_PRIVATE_KEY);
 
     return {
       correo,
