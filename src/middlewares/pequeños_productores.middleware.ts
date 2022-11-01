@@ -9,7 +9,7 @@ export class PequeñosProductoresMiddleware implements NestMiddleware {
       req.params.id,
     );
     if (respuesta) {
-      res.status(respuesta.getStatus()).json(respuesta);
+      return res.status(respuesta.getStatus()).json(respuesta);
     }
     next();
   }
