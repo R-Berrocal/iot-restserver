@@ -65,4 +65,20 @@ export class PequeñosProductoresService {
       return new HttpException('User not exist', HttpStatus.CONFLICT);
     }
   }
+
+  async correoExiste(correo: string): Promise<any> {
+    const pequeñoProductor = await this.pequeñosProductoresRepository.findOne({
+      where: {
+        correo,
+      },
+    });
+
+    if (!pequeñoProductor) {
+      return new HttpException(
+        `Usuario con correo ${correo} no existe en la bd`,
+        HttpStatus.CONFLICT,
+      );
+    }
+    return pequeñoProductor;
+  }
 }

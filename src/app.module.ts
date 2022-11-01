@@ -1,4 +1,5 @@
 import {
+  Global,
   MiddlewareConsumer,
   Module,
   NestModule,
@@ -11,6 +12,7 @@ import { AppService } from './app.service';
 import { PequeñosProductoresMiddleware } from './middlewares/pequeños_productores.middleware';
 import { PequeñosProductoresController } from './pequeños_productores/pequeños_productores.controller';
 import { PequeñosProductoresModule } from './pequeños_productores/pequeños_productores.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -29,6 +31,7 @@ import { PequeñosProductoresModule } from './pequeños_productores/pequeños_pr
       entities: [__dirname + '/**/*.entity{.js,.ts}'],
       synchronize: true,
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
