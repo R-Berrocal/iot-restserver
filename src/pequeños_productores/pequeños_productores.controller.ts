@@ -8,6 +8,7 @@ import {
   Put,
   Delete,
   UseGuards,
+  HttpException,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreatePequeñosProductoresDto } from './dto/create-pequeño-productor.dto';
@@ -29,7 +30,7 @@ export class PequeñosProductoresController {
   @Get(':id')
   getPequeñoProductor(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<PequeñosProductores> {
+  ): Promise<PequeñosProductores | HttpException> {
     return this.pequeñosProductoresService.getPequeñoProductor(id);
   }
 
@@ -47,7 +48,7 @@ export class PequeñosProductoresController {
   updatePequeñosProductores(
     @Param('id', ParseIntPipe) id: number,
     @Body() updatePequeñoProductor: UpdatePequeñoProductorDto,
-  ): Promise<PequeñosProductores> {
+  ): Promise<PequeñosProductores | HttpException> {
     return this.pequeñosProductoresService.updatePequeñoProductor(
       id,
       updatePequeñoProductor,
@@ -58,7 +59,7 @@ export class PequeñosProductoresController {
   @Delete(':id')
   deletePequeñosProductores(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<PequeñosProductores> {
+  ): Promise<PequeñosProductores | HttpException> {
     return this.pequeñosProductoresService.deletePequeñoProductor(id);
   }
 }

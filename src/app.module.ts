@@ -1,16 +1,8 @@
-import {
-  Global,
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PequeñosProductoresMiddleware } from './middlewares/pequeños_productores.middleware';
-import { PequeñosProductoresController } from './pequeños_productores/pequeños_productores.controller';
 import { PequeñosProductoresModule } from './pequeños_productores/pequeños_productores.module';
 import { AuthModule } from './auth/auth.module';
 
@@ -36,14 +28,4 @@ import { AuthModule } from './auth/auth.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(PequeñosProductoresMiddleware)
-      .exclude(
-        { path: 'pequenos-productores', method: RequestMethod.GET },
-        { path: 'pequenos-productores', method: RequestMethod.POST },
-      )
-      .forRoutes(PequeñosProductoresController);
-  }
-}
+export class AppModule {}

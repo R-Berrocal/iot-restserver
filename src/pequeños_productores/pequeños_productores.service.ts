@@ -17,12 +17,16 @@ export class PequeñosProductoresService {
     return this.pequeñosProductoresRepository.find();
   }
 
-  getPequeñoProductor(idPequeñosProductores: number) {
-    return this.pequeñosProductoresRepository.findOne({
+  async getPequeñoProductor(idPequeñosProductores: number) {
+    const pequeñoProductor = await this.pequeñosProductoresRepository.findOne({
       where: {
         idPequeñosProductores,
       },
     });
+    if (!pequeñoProductor) {
+      return new HttpException('User not exist', HttpStatus.CONFLICT);
+    }
+    return pequeñoProductor;
   }
 
   async createPequeñoProductor(body: CreatePequeñosProductoresDto) {
@@ -52,18 +56,6 @@ export class PequeñosProductoresService {
     const pequeñoProductor = await this.getPequeñoProductor(id);
     await this.pequeñosProductoresRepository.softDelete(id);
     return pequeñoProductor;
-  }
-
-  async userNotExist(idPequeñosProductores: number) {
-    const pequeñoProductor = await this.pequeñosProductoresRepository.findOne({
-      where: {
-        idPequeñosProductores,
-      },
-    });
-
-    if (!pequeñoProductor) {
-      return new HttpException('User not exist', HttpStatus.CONFLICT);
-    }
   }
 
   async correoExiste(correo: string): Promise<any> {
