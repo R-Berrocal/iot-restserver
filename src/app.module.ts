@@ -3,8 +3,10 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PequeñosProductoresModule } from './pequeños_productores/pequeños_productores.module';
+import { PequeñoProductorModule } from './pequeño_productor/pequeño_productor.module';
 import { AuthModule } from './auth/auth.module';
+import { DepartamentoModule } from './departamento/departamento.module';
+import { MunicipioModule } from './municipio/municipio.module';
 
 @Module({
   imports: [
@@ -12,7 +14,6 @@ import { AuthModule } from './auth/auth.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    PequeñosProductoresModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
@@ -23,7 +24,10 @@ import { AuthModule } from './auth/auth.module';
       entities: [__dirname + '/**/*.entity{.js,.ts}'],
       synchronize: true,
     }),
+    PequeñoProductorModule,
     AuthModule,
+    DepartamentoModule,
+    MunicipioModule,
   ],
   controllers: [AppController],
   providers: [AppService],

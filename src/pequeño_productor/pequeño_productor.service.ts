@@ -1,0 +1,93 @@
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { PequeñoProductor } from './entities/pequeño_productor.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreatePequeñoProductorDto } from './dto/create-pequeño-productor.dto';
+import * as bcrypt from 'bcrypt';
+import { UpdatePequeñoProductorDto } from './dto/update-pequeño-productor.dto';
+
+@Injectable()
+export class PequeñoProductorService {
+  constructor(
+    @InjectRepository(PequeñoProductor)
+    private pequeñoProductorRepository: Repository<PequeñoProductor>,
+  ) {}
+
+  getPequeñosProductores() {
+    return this.pequeñoProductorRepository.find();
+  }
+
+  async getPequeñoProductor(idPequeñoProductor: number) {
+    const pequeñoProductor = await this.pequeñoProductorRepository.findOne({
+      where: {
+        idPequeñoProductor,
+      },
+    });
+    if (!pequeñoProductor) {
+      return new HttpException('User not exist', HttpStatus.CONFLICT);
+    }
+    return pequeñoProductor;
+  }
+
+  async createPequeñoProductor(body: CreatePequeñoProductorDto) {
+    const correo = await this.correoExiste(body.correo);
+    if (correo) {
+      return correo;
+    }
+    const pequeñoProductor = this.pequeñoProductorRepository.create(body);
+    pequeñoProductor.contraseña = await bcrypt.hash(
+      pequeñoProductor.contraseña,
+      10,
+    );
+    return this.pequeñoProductorRepository.save(pequeñoProductor);
+  }
+
+  async updatePequeñoProductor(
+    idPequeñoProductor: number,
+    body: UpdatePequeñoProductorDto,
+  ) {
+    if (body.contraseña) {
+      body.contraseña = await bcrypt.hash(body.contraseña, 10);
+    }
+    await this.pequeñoProductorRepository.update({ idPequeñoProductor }, body);
+    return await this.getPequeñoProductor(idPequeñoProductor);
+  }
+
+  async deletePequeñoProductor(id: number) {
+    const pequeñoProductor = await this.getPequeñoProductor(id);
+    await this.pequeñoProductorRepository.softDelete(id);
+    return pequeñoProductor;
+  }
+
+  async correoExiste(correo: string): Promise<any> {
+    const pequeñoProductor = await this.pequeñoProductorRepository.findOne({
+      where: {
+        correo,
+      },
+    });
+
+    if (pequeñoProductor) {
+      return new HttpException(
+        `pequeño productor  con correo ${correo} ya existe en la bd`,
+        HttpStatus.CONFLICT,
+      );
+    }
+    return null;
+  }
+
+  async correoNoExiste(correo: string): Promise<any> {
+    const pequeñoProductor = await this.pequeñoProductorRepository.findOne({
+      where: {
+        correo,
+      },
+    });
+
+    if (!pequeñoProductor) {
+      return new HttpException(
+        `Usuario con correo ${correo} no existe en la bd`,
+        HttpStatus.CONFLICT,
+      );
+    }
+    return pequeñoProductor;
+  }
+}

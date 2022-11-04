@@ -12,7 +12,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate({ idPequeñosProductores, correo }: any) {
-    return { idPequeñosProductores, correo };
+  async validate({ idPequeñoProductor, correo }: any) {
+    return { idPequeñoProductor, correo };
   }
 }

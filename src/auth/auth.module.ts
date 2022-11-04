@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PequeñosProductoresModule } from 'src/pequeños_productores/pequeños_productores.module';
+import { PequeñoProductorModule } from 'src/pequeño_productor/pequeño_productor.module';
 import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './local.strategy';
@@ -12,7 +12,7 @@ import { JwtStrategy } from './jwt.strategy';
     ConfigModule.forRoot({
       envFilePath: '.env',
     }),
-    PequeñosProductoresModule,
+    PequeñoProductorModule,
     PassportModule,
     JwtModule.register({
       secret: process.env.SECRETOR_PRIVATE_KEY,

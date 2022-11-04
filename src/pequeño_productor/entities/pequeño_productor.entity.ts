@@ -7,10 +7,10 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 
-@Entity('pequeños_productores')
-export class PequeñosProductores {
+@Entity({ name: 'pequeño_productor' })
+export class PequeñoProductor {
   @PrimaryGeneratedColumn()
-  idPequeñosProductores: number;
+  idPequeñoProductor: number;
 
   @Column('varchar')
   nombre1: string;

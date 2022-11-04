@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { PequeñosProductoresService } from 'src/pequeños_productores/pequeños_productores.service';
+import { PequeñoProductorService } from 'src/pequeño_productor/pequeño_productor.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private pequeñosProductoresService: PequeñosProductoresService,
+    private pequeñoProductorService: PequeñoProductorService,
     private jwtService: JwtService,
   ) {}
 
@@ -14,7 +14,7 @@ export class AuthService {
     correo: string,
     contraseña: string,
   ): Promise<any> {
-    const pequeñoProductor = await this.pequeñosProductoresService.correoExiste(
+    const pequeñoProductor = await this.pequeñoProductorService.correoNoExiste(
       correo,
     );
     const validarContraseña = await bcrypt.compare(
@@ -30,12 +30,12 @@ export class AuthService {
   }
 
   async login(pequeñoProductor: any) {
-    const { correo, idPequeñosProductores } = pequeñoProductor;
-    const payload = { correo, idPequeñosProductores };
+    const { correo, idPequeñoProductor } = pequeñoProductor;
+    const payload = { correo, idPequeñoProductor };
 
     return {
       correo,
-      idPequeñosProductores,
+      idPequeñoProductor,
       token: this.jwtService.sign(payload),
     };
   }
