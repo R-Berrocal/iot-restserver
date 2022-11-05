@@ -18,11 +18,12 @@ import { Municipio } from './entities/municipio.entity';
 export class MunicipioController {
   constructor(private readonly municipioService: MunicipioService) {}
 
-  @Post()
+  @Post(':id')
   create(
+    @Param('id', ParseIntPipe) id: number,
     @Body() newMunicipio: CreateMunicipioDto,
   ): Promise<Municipio | HttpException> {
-    return this.municipioService.createMunicipio(newMunicipio);
+    return this.municipioService.createMunicipio(id, newMunicipio);
   }
 
   @Get()

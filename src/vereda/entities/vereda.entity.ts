@@ -3,21 +3,21 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class Departamento {
+export class Vereda {
   @PrimaryGeneratedColumn()
-  idDepartamento: number;
+  idVereda: number;
 
   @Column({ unique: true })
   nombre: string;
 
-  @OneToMany(() => Municipio, (municipio) => municipio.departamento)
-  municipios: Municipio;
+  @ManyToOne(() => Municipio, (municipio) => municipio.veredas)
+  municipio: Municipio;
 
   @CreateDateColumn()
   creteadAt: Date;

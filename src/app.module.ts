@@ -7,6 +7,7 @@ import { PequeñoProductorModule } from './pequeño_productor/pequeño_productor
 import { AuthModule } from './auth/auth.module';
 import { DepartamentoModule } from './departamento/departamento.module';
 import { MunicipioModule } from './municipio/municipio.module';
+import { VeredaModule } from './vereda/vereda.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { MunicipioModule } from './municipio/municipio.module';
     AuthModule,
     DepartamentoModule,
     MunicipioModule,
+    VeredaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

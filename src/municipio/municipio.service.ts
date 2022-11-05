@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DepartamentoService } from 'src/departamento/departamento.service';
 import { Repository } from 'typeorm';
 import { CreateMunicipioDto } from './dto/create-municipio.dto';
 import { UpdateMunicipioDto } from './dto/update-municipio.dto';
@@ -9,25 +10,39 @@ import { Municipio } from './entities/municipio.entity';
 export class MunicipioService {
   constructor(
     @InjectRepository(Municipio)
-    private MunicipioRepository: Repository<Municipio>,
+    private municipioRepository: Repository<Municipio>,
+    private departamentoService: DepartamentoService,
   ) {}
-  async createMunicipio(newMunicipio: CreateMunicipioDto) {
-    const mun = await this.MunicipioExiste(newMunicipio.nombre);
-    if (mun) {
-      return mun;
+  async createMunicipio(id: number, newMunicipio: CreateMunicipioDto) {
+    const departamento = await this.departamentoService.departamentoIdExiste(
+      id,
+    );
+    if (!departamento) {
+      return new HttpException(
+        `No existe un departamento con id  ${id}`,
+        HttpStatus.NOT_FOUND,
+      );
     }
-    const municipio = this.MunicipioRepository.create(newMunicipio);
-    return await this.MunicipioRepository.save(municipio);
+    const munExiste = await this.municipioExiste(newMunicipio.nombre);
+    if (munExiste) {
+      return munExiste;
+    }
+    const municipio = this.municipioRepository.create(newMunicipio);
+    municipio.departamento = departamento;
+    return await this.municipioRepository.save(municipio);
   }
 
   findAllMunicipio() {
-    return this.MunicipioRepository.find();
+    return this.municipioRepository.find({ relations: { departamento: true } });
   }
 
   async findOneMunicipio(id: number) {
-    const municipio = await this.MunicipioRepository.findOne({
+    const municipio = await this.municipioRepository.findOne({
       where: {
         idMunicipio: id,
+      },
+      relations: {
+        departamento: true,
       },
     });
     if (!municipio) {
@@ -40,18 +55,18 @@ export class MunicipioService {
   }
 
   async updateMunicipio(id: number, updateMunicipio: UpdateMunicipioDto) {
-    await this.MunicipioRepository.update({ idMunicipio: id }, updateMunicipio);
+    await this.municipioRepository.update({ idMunicipio: id }, updateMunicipio);
     return await this.findOneMunicipio(id);
   }
 
   async removeMunicipio(id: number) {
     const municipio = await this.findOneMunicipio(id);
-    await this.MunicipioRepository.delete({ idMunicipio: id });
+    await this.municipioRepository.delete({ idMunicipio: id });
     return municipio;
   }
 
-  async MunicipioExiste(nombre: string) {
-    const mun = await this.MunicipioRepository.findOne({
+  async municipioExiste(nombre: string) {
+    const mun = await this.municipioRepository.findOne({
       where: {
         nombre,
       },
@@ -63,5 +78,16 @@ export class MunicipioService {
       );
     }
     return null;
+  }
+  async municipioIdExiste(id: number) {
+    const mun = await this.municipioRepository.findOne({
+      where: {
+        idMunicipio: id,
+      },
+    });
+    if (!mun) {
+      return null;
+    }
+    return mun;
   }
 }

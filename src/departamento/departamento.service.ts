@@ -21,7 +21,9 @@ export class DepartamentoService {
   }
 
   findAllDepartamento() {
-    return this.departamentoRepository.find();
+    return this.departamentoRepository.find({
+      relations: ['municipios'],
+    });
   }
 
   async findOneDepartamento(id: number) {
@@ -29,6 +31,7 @@ export class DepartamentoService {
       where: {
         idDepartamento: id,
       },
+      relations: ['municipios'],
     });
     if (!departamento) {
       return new HttpException(
@@ -69,5 +72,16 @@ export class DepartamentoService {
       );
     }
     return null;
+  }
+  async departamentoIdExiste(id: number) {
+    const dep = await this.departamentoRepository.findOne({
+      where: {
+        idDepartamento: id,
+      },
+    });
+    if (!dep) {
+      return null;
+    }
+    return dep;
   }
 }
