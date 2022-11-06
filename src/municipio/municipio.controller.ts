@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  HttpException,
 } from '@nestjs/common';
 import { MunicipioService } from './municipio.service';
 import { CreateMunicipioDto } from './dto/create-municipio.dto';
@@ -22,7 +21,7 @@ export class MunicipioController {
   create(
     @Param('id', ParseIntPipe) id: number,
     @Body() newMunicipio: CreateMunicipioDto,
-  ): Promise<Municipio | HttpException> {
+  ): Promise<Municipio> {
     return this.municipioService.createMunicipio(id, newMunicipio);
   }
 
@@ -32,9 +31,7 @@ export class MunicipioController {
   }
 
   @Get(':id')
-  findOne(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<Municipio | HttpException> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<Municipio> {
     return this.municipioService.findOneMunicipio(+id);
   }
 
@@ -42,14 +39,12 @@ export class MunicipioController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateMunicipioDto: UpdateMunicipioDto,
-  ): Promise<Municipio | HttpException> {
+  ): Promise<Municipio> {
     return this.municipioService.updateMunicipio(+id, updateMunicipioDto);
   }
 
   @Delete(':id')
-  remove(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<Municipio | HttpException> {
+  remove(@Param('id', ParseIntPipe) id: number): Promise<Municipio> {
     return this.municipioService.removeMunicipio(+id);
   }
 }

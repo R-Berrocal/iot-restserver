@@ -1,6 +1,6 @@
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Injectable()
@@ -18,7 +18,10 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       contraseña,
     );
     if (!pequeñoProductor) {
-      throw new UnauthorizedException();
+      throw new HttpException(
+        'pequeñor productor con correo y/o contraseña incorrectos',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
     return pequeñoProductor;
   }

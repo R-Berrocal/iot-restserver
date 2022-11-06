@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  HttpException,
 } from '@nestjs/common';
 import { DepartamentoService } from './departamento.service';
 import { CreateDepartamentoDto } from './dto/create-departamento.dto';
@@ -21,7 +20,7 @@ export class DepartamentoController {
   @Post()
   create(
     @Body() newDepartamento: CreateDepartamentoDto,
-  ): Promise<Departamento | HttpException> {
+  ): Promise<Departamento> {
     return this.departamentoService.createDepartamento(newDepartamento);
   }
 
@@ -31,9 +30,7 @@ export class DepartamentoController {
   }
 
   @Get(':id')
-  findOne(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<Departamento | HttpException> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<Departamento> {
     return this.departamentoService.findOneDepartamento(+id);
   }
 
@@ -41,7 +38,7 @@ export class DepartamentoController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateDepartamentoDto: UpdateDepartamentoDto,
-  ): Promise<Departamento | HttpException> {
+  ): Promise<Departamento> {
     return this.departamentoService.updateDepartamento(
       +id,
       updateDepartamentoDto,
@@ -49,9 +46,7 @@ export class DepartamentoController {
   }
 
   @Delete(':id')
-  remove(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<Departamento | HttpException> {
+  remove(@Param('id', ParseIntPipe) id: number): Promise<Departamento> {
     return this.departamentoService.removeDepartamento(+id);
   }
 }

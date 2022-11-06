@@ -14,19 +14,8 @@ export class MunicipioService {
     private departamentoService: DepartamentoService,
   ) {}
   async createMunicipio(id: number, newMunicipio: CreateMunicipioDto) {
-    const departamento = await this.departamentoService.departamentoIdExiste(
-      id,
-    );
-    if (!departamento) {
-      return new HttpException(
-        `No existe un departamento con id  ${id}`,
-        HttpStatus.NOT_FOUND,
-      );
-    }
-    const munExiste = await this.municipioExiste(newMunicipio.nombre);
-    if (munExiste) {
-      return munExiste;
-    }
+    await this.municipioExiste(newMunicipio.nombre);
+    const departamento = await this.departamentoService.findOneDepartamento(id);
     const municipio = this.municipioRepository.create(newMunicipio);
     municipio.departamento = departamento;
     return await this.municipioRepository.save(municipio);
@@ -46,7 +35,7 @@ export class MunicipioService {
       },
     });
     if (!municipio) {
-      return new HttpException(
+      throw new HttpException(
         `No existe el municipio con id ${id}`,
         HttpStatus.NOT_FOUND,
       );
@@ -55,6 +44,7 @@ export class MunicipioService {
   }
 
   async updateMunicipio(id: number, updateMunicipio: UpdateMunicipioDto) {
+    await this.municipioExiste(updateMunicipio.nombre);
     await this.municipioRepository.update({ idMunicipio: id }, updateMunicipio);
     return await this.findOneMunicipio(id);
   }
@@ -72,22 +62,10 @@ export class MunicipioService {
       },
     });
     if (mun) {
-      return new HttpException(
+      throw new HttpException(
         `ya existe el Municipio ${nombre}`,
         HttpStatus.CONFLICT,
       );
     }
-    return null;
-  }
-  async municipioIdExiste(id: number) {
-    const mun = await this.municipioRepository.findOne({
-      where: {
-        idMunicipio: id,
-      },
-    });
-    if (!mun) {
-      return null;
-    }
-    return mun;
   }
 }

@@ -24,16 +24,16 @@ export class PequeñoProductorService {
       },
     });
     if (!pequeñoProductor) {
-      return new HttpException('User not exist', HttpStatus.CONFLICT);
+      throw new HttpException(
+        'Pequeño productor no existe',
+        HttpStatus.NOT_FOUND,
+      );
     }
     return pequeñoProductor;
   }
 
   async createPequeñoProductor(body: CreatePequeñoProductorDto) {
-    const correo = await this.correoExiste(body.correo);
-    if (correo) {
-      return correo;
-    }
+    await this.correoExiste(body.correo);
     const pequeñoProductor = this.pequeñoProductorRepository.create(body);
     pequeñoProductor.contraseña = await bcrypt.hash(
       pequeñoProductor.contraseña,
@@ -67,12 +67,11 @@ export class PequeñoProductorService {
     });
 
     if (pequeñoProductor) {
-      return new HttpException(
+      throw new HttpException(
         `pequeño productor  con correo ${correo} ya existe en la bd`,
         HttpStatus.CONFLICT,
       );
     }
-    return null;
   }
 
   async correoNoExiste(correo: string): Promise<any> {
@@ -83,10 +82,7 @@ export class PequeñoProductorService {
     });
 
     if (!pequeñoProductor) {
-      return new HttpException(
-        `Usuario con correo ${correo} no existe en la bd`,
-        HttpStatus.CONFLICT,
-      );
+      return null;
     }
     return pequeñoProductor;
   }

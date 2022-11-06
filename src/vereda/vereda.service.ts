@@ -14,17 +14,8 @@ export class VeredaService {
     private municipioService: MunicipioService,
   ) {}
   async createVereda(id: number, newVereda: CreateVeredaDto) {
-    const municipio = await this.municipioService.municipioIdExiste(id);
-    if (!municipio) {
-      return new HttpException(
-        `No existe un municipio con id  ${id}`,
-        HttpStatus.NOT_FOUND,
-      );
-    }
-    const verExiste = await this.veredaExiste(newVereda.nombre);
-    if (verExiste) {
-      return verExiste;
-    }
+    await this.veredaExiste(newVereda.nombre);
+    const municipio = await this.municipioService.findOneMunicipio(id);
     const vereda = this.veredaRepository.create(newVereda);
     vereda.municipio = municipio;
     return await this.veredaRepository.save(vereda);
@@ -44,7 +35,7 @@ export class VeredaService {
       relations: ['municipio', 'municipio.departamento'],
     });
     if (!vereda) {
-      return new HttpException(
+      throw new HttpException(
         `No existe la vereda con id ${id}`,
         HttpStatus.NOT_FOUND,
       );
@@ -53,6 +44,7 @@ export class VeredaService {
   }
 
   async updateVereda(id: number, updateVereda: UpdateVeredaDto) {
+    await this.veredaExiste(updateVereda.nombre);
     await this.veredaRepository.update({ idVereda: id }, updateVereda);
     return await this.findOneVereda(id);
   }
@@ -70,11 +62,10 @@ export class VeredaService {
       },
     });
     if (ver) {
-      return new HttpException(
+      throw new HttpException(
         `ya existe la vereda ${nombre}`,
         HttpStatus.CONFLICT,
       );
     }
-    return null;
   }
 }

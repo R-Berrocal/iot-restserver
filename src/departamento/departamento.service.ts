@@ -12,10 +12,7 @@ export class DepartamentoService {
     private departamentoRepository: Repository<Departamento>,
   ) {}
   async createDepartamento(newDepartamento: CreateDepartamentoDto) {
-    const dep = await this.departamentoExiste(newDepartamento.nombre);
-    if (dep) {
-      return dep;
-    }
+    await this.departamentoExiste(newDepartamento.nombre);
     const departamento = this.departamentoRepository.create(newDepartamento);
     return await this.departamentoRepository.save(departamento);
   }
@@ -34,7 +31,7 @@ export class DepartamentoService {
       relations: ['municipios'],
     });
     if (!departamento) {
-      return new HttpException(
+      throw new HttpException(
         `No existe el departamento con id ${id}`,
         HttpStatus.NOT_FOUND,
       );
@@ -46,6 +43,7 @@ export class DepartamentoService {
     id: number,
     updateDepartamento: UpdateDepartamentoDto,
   ) {
+    await this.departamentoExiste(updateDepartamento.nombre);
     await this.departamentoRepository.update(
       { idDepartamento: id },
       updateDepartamento,
@@ -66,22 +64,10 @@ export class DepartamentoService {
       },
     });
     if (dep) {
-      return new HttpException(
+      throw new HttpException(
         `ya existe el departamento ${nombre}`,
         HttpStatus.CONFLICT,
       );
     }
-    return null;
-  }
-  async departamentoIdExiste(id: number) {
-    const dep = await this.departamentoRepository.findOne({
-      where: {
-        idDepartamento: id,
-      },
-    });
-    if (!dep) {
-      return null;
-    }
-    return dep;
   }
 }
