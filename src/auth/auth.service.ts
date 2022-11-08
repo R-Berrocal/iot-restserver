@@ -17,9 +17,10 @@ export class AuthService {
     const pequeñoProductor = await this.pequeñoProductorService.correoNoExiste(
       correo,
     );
+
     const validarContraseña = await bcrypt.compare(
       contraseña,
-      pequeñoProductor.contraseña || ' ',
+      pequeñoProductor ? pequeñoProductor.contraseña : ' ',
     );
 
     if (pequeñoProductor && validarContraseña) {
