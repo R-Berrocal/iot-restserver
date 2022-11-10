@@ -25,7 +25,7 @@ export class PequeñoProductorService {
     });
     if (!pequeñoProductor) {
       throw new HttpException(
-        'Pequeño productor no existe',
+        'Pequeño productor no existe en la bd',
         HttpStatus.NOT_FOUND,
       );
     }
