@@ -36,7 +36,7 @@ export class MunicipioService {
     });
     if (!municipio) {
       throw new HttpException(
-        `No existe el municipio con id ${id}`,
+        `No existe el municipio con id ${id} en la bd`,
         HttpStatus.NOT_FOUND,
       );
     }
