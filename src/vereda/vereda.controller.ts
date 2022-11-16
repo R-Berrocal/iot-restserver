@@ -18,7 +18,7 @@ import { Vereda } from './entities/vereda.entity';
 export class VeredaController {
   constructor(private readonly veredaService: VeredaService) {}
 
-  @Post(':id')
+  @Post(':id/municipio')
   create(
     @Param('id', ParseIntPipe) id: number,
     @Body() newVereda: CreateVeredaDto,

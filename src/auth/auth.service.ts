@@ -40,4 +40,15 @@ export class AuthService {
       token: this.jwtService.sign(payload),
     };
   }
+
+  async renovateToken(pequeñoProductorAuth: any) {
+    const { correo, idPequeñoProductor } = pequeñoProductorAuth;
+    const payload = { correo, idPequeñoProductor };
+
+    return {
+      correo,
+      idPequeñoProductor,
+      token: this.jwtService.sign(payload),
+    };
+  }
 }

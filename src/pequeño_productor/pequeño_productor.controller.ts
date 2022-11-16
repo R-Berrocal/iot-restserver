@@ -8,6 +8,8 @@ import {
   Put,
   Delete,
   UseGuards,
+  Request,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreatePequeñoProductorDto } from './dto/create-pequeño-productor.dto';
@@ -27,10 +29,15 @@ export class PequeñoProductorController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  getPequeñoProductor(
+  async getPequeñoProductor(
     @Param('id', ParseIntPipe) id: number,
+    @Request() req,
   ): Promise<PequeñoProductor> {
-    return this.pequeñoProductorService.getPequeñoProductor(id);
+    const pequeñoProductor =
+      await this.pequeñoProductorService.getPequeñoProductor(id);
+    if (pequeñoProductor.idPequeñoProductor != req.user.idPequeñoProductor)
+      throw new UnauthorizedException();
+    return pequeñoProductor;
   }
 
   @Post()
@@ -47,10 +54,12 @@ export class PequeñoProductorController {
   updatePequeñoProductor(
     @Param('id', ParseIntPipe) id: number,
     @Body() updatePequeñoProductor: UpdatePequeñoProductorDto,
+    @Request() req,
   ): Promise<PequeñoProductor> {
     return this.pequeñoProductorService.updatePequeñoProductor(
       id,
       updatePequeñoProductor,
+      req.user,
     );
   }
 
@@ -58,7 +67,8 @@ export class PequeñoProductorController {
   @Delete(':id')
   deletePequeñoProductore(
     @Param('id', ParseIntPipe) id: number,
+    @Request() req,
   ): Promise<PequeñoProductor> {
-    return this.pequeñoProductorService.deletePequeñoProductor(id);
+    return this.pequeñoProductorService.deletePequeñoProductor(id, req.user);
   }
 }

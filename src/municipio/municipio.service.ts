@@ -22,7 +22,9 @@ export class MunicipioService {
   }
 
   findAllMunicipio() {
-    return this.municipioRepository.find({ relations: { departamento: true } });
+    return this.municipioRepository.find({
+      relations: { departamento: true, veredas: true },
+    });
   }
 
   async findOneMunicipio(id: number) {
@@ -32,6 +34,7 @@ export class MunicipioService {
       },
       relations: {
         departamento: true,
+        veredas: true,
       },
     });
     if (!municipio) {

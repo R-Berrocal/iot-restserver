@@ -23,7 +23,7 @@ export class VeredaService {
 
   findAllVereda() {
     return this.veredaRepository.find({
-      relations: ['municipio', 'municipio.departamento'],
+      relations: ['municipio'],
     });
   }
 
@@ -32,7 +32,7 @@ export class VeredaService {
       where: {
         idVereda: id,
       },
-      relations: ['municipio', 'municipio.departamento'],
+      relations: ['municipio'],
     });
     if (!vereda) {
       throw new HttpException(

@@ -1,4 +1,9 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PequeñoProductor } from './entities/pequeño_productor.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -45,16 +50,30 @@ export class PequeñoProductorService {
   async updatePequeñoProductor(
     idPequeñoProductor: number,
     body: UpdatePequeñoProductorDto,
+    pequeñoProductorAuth: any,
   ) {
     if (body.contraseña) {
       body.contraseña = await bcrypt.hash(body.contraseña, 10);
     }
+    const pequeñoProductor = await this.getPequeñoProductor(idPequeñoProductor);
+    if (
+      pequeñoProductor.idPequeñoProductor !=
+      pequeñoProductorAuth.idPequeñoProductor
+    ) {
+      throw new UnauthorizedException();
+    }
     await this.pequeñoProductorRepository.update({ idPequeñoProductor }, body);
-    return await this.getPequeñoProductor(idPequeñoProductor);
+    return pequeñoProductor;
   }
 
-  async deletePequeñoProductor(id: number) {
+  async deletePequeñoProductor(id: number, pequeñoProductorAuth: any) {
     const pequeñoProductor = await this.getPequeñoProductor(id);
+    if (
+      pequeñoProductor.idPequeñoProductor !=
+      pequeñoProductorAuth.idPequeñoProductor
+    ) {
+      throw new UnauthorizedException();
+    }
     await this.pequeñoProductorRepository.softDelete(id);
     return pequeñoProductor;
   }

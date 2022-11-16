@@ -17,7 +17,7 @@ import { Municipio } from './entities/municipio.entity';
 export class MunicipioController {
   constructor(private readonly municipioService: MunicipioService) {}
 
-  @Post(':id')
+  @Post(':id/departamento')
   create(
     @Param('id', ParseIntPipe) id: number,
     @Body() newMunicipio: CreateMunicipioDto,
