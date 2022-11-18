@@ -1,3 +1,4 @@
+import { Cultivo } from 'src/cultivo/entities/cultivo.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -5,6 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity({ name: 'pequeño_productor' })
@@ -29,6 +31,9 @@ export class PequeñoProductor {
 
   @Column('varchar')
   contraseña: string;
+
+  @OneToMany(() => Cultivo, (cultivo) => cultivo.pequeño_productor)
+  cultivos: Cultivo;
 
   @CreateDateColumn()
   creteadAt: Date;

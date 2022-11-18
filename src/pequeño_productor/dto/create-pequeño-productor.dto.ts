@@ -1,8 +1,6 @@
 import { IsNotEmpty, IsEmail, MinLength, IsOptional } from 'class-validator';
 
 export class CreatePequeñoProductorDto {
-  idPequeñoProductor: number;
-
   @IsNotEmpty()
   nombre1: string;
 

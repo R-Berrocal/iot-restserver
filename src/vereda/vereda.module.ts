@@ -9,5 +9,6 @@ import { MunicipioModule } from 'src/municipio/municipio.module';
   imports: [TypeOrmModule.forFeature([Vereda]), MunicipioModule],
   controllers: [VeredaController],
   providers: [VeredaService],
+  exports: [VeredaService],
 })
 export class VeredaModule {}

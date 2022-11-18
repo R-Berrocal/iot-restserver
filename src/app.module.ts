@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { DepartamentoModule } from './departamento/departamento.module';
 import { MunicipioModule } from './municipio/municipio.module';
 import { VeredaModule } from './vereda/vereda.module';
+import { CultivoModule } from './cultivo/cultivo.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { VeredaModule } from './vereda/vereda.module';
     DepartamentoModule,
     MunicipioModule,
     VeredaModule,
+    CultivoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
