@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PequeñoProductorService } from 'src/pequeño_productor/pequeño_productor.service';
 import { VeredaService } from 'src/vereda/vereda.service';
@@ -16,7 +21,6 @@ export class CultivoService {
   ) {}
   async create(
     idPequeñoProductor: number,
-    pequeñoProductor: any,
     idVereda: number,
     newCultivo: CreateCultivoDto,
   ) {
@@ -24,12 +28,6 @@ export class CultivoService {
       await this.pequeñoProductorService.getPequeñoProductor(
         idPequeñoProductor,
       );
-    if (
-      pequeño_productor.idPequeñoProductor !=
-      pequeñoProductor.idPequeñoProductor
-    ) {
-      throw new UnauthorizedException();
-    }
     const vereda = await this.veredaService.findOneVereda(idVereda);
 
     const cultivo = this.cultivoRepository.create(newCultivo);
@@ -39,21 +37,51 @@ export class CultivoService {
     return await this.cultivoRepository.save(cultivo);
   }
 
-  findAll() {
-    return this.cultivoRepository.find({
+  async findAll(idPequeñoProductor: number): Promise<Cultivo[]> {
+    const { cultivos } =
+      await this.pequeñoProductorService.getPequeñoProductorCultivos(
+        idPequeñoProductor,
+      );
+    return cultivos;
+  }
+
+  async findOne(
+    idCultivo: number,
+    idPequeñoProductor: number,
+  ): Promise<Cultivo> {
+    const cultivo = await this.cultivoRepository.findOne({
+      where: {
+        idCultivo,
+      },
       relations: ['pequeño_productor', 'vereda'],
     });
+    if (!cultivo) {
+      throw new HttpException(
+        'Cultivo no existe en la bd',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    if (idPequeñoProductor != cultivo.pequeño_productor.idPequeñoProductor) {
+      throw new UnauthorizedException();
+    }
+
+    return cultivo;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cultivo`;
+  async update(
+    idCultivo: number,
+    updateCultivo: UpdateCultivoDto,
+    idPequeñoProductor: number,
+  ) {
+    let cultivo = await this.findOne(idCultivo, idPequeñoProductor);
+    await this.cultivoRepository.update({ idCultivo }, updateCultivo);
+    cultivo = await this.findOne(idCultivo, idPequeñoProductor);
+    return cultivo;
   }
 
-  update(id: number, updateCultivoDto: UpdateCultivoDto) {
-    return `This action updates a #${id} cultivo`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} cultivo`;
+  async remove(idCultivo: number, idPequeñoProductor: number) {
+    const cultivo = await this.findOne(idCultivo, idPequeñoProductor);
+    await this.cultivoRepository.softDelete(idCultivo);
+    return cultivo;
   }
 }

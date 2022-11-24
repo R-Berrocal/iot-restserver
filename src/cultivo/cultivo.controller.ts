@@ -2,8 +2,8 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Body,
-  Patch,
   Param,
   Delete,
   ParseIntPipe,
@@ -20,39 +20,52 @@ export class CultivoController {
   constructor(private readonly cultivoService: CultivoService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Post(':idPequenoProductor/pequenoProductor/:idVereda/vereda')
+  @Post(':idVereda/vereda')
   create(
-    @Param('idPequenoProductor', ParseIntPipe) idPequeñoProductor: number,
     @Param('idVereda', ParseIntPipe) idVereda: number,
     @Body()
     newCultivo: CreateCultivoDto,
-    @Request() req,
+    @Request() req: any,
   ) {
     return this.cultivoService.create(
-      idPequeñoProductor,
-      req.user,
+      req.user.idPequeñoProductor,
       idVereda,
       newCultivo,
     );
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.cultivoService.findAll();
+  async findAll(@Request() req: any) {
+    return await this.cultivoService.findAll(req.user.idPequeñoProductor);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cultivoService.findOne(+id);
+  async findOne(@Param('id', ParseIntPipe) id: number, @Request() req: any) {
+    const { pequeño_productor, ...cultivo } = await this.cultivoService.findOne(
+      id,
+      req.user.idPequeñoProductor,
+    );
+    return cultivo;
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCultivoDto: UpdateCultivoDto) {
-    return this.cultivoService.update(+id, updateCultivoDto);
+  @UseGuards(JwtAuthGuard)
+  @Put(':id')
+  update(
+    @Param('id', ParseIntPipe) idCultivo: number,
+    @Body() updateCultivo: UpdateCultivoDto,
+    @Request() req: any,
+  ) {
+    return this.cultivoService.update(
+      idCultivo,
+      updateCultivo,
+      req.user.idPequeñoProductor,
+    );
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cultivoService.remove(+id);
+  remove(@Param('id', ParseIntPipe) idCultivo: number, @Request() req: any) {
+    return this.cultivoService.remove(idCultivo, req.user.idPequeñoProductor);
   }
 }

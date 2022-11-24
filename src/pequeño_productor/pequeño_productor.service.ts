@@ -55,7 +55,7 @@ export class PequeñoProductorService {
     if (body.contraseña) {
       body.contraseña = await bcrypt.hash(body.contraseña, 10);
     }
-    const pequeñoProductor = await this.getPequeñoProductor(idPequeñoProductor);
+    let pequeñoProductor = await this.getPequeñoProductor(idPequeñoProductor);
     if (
       pequeñoProductor.idPequeñoProductor !=
       pequeñoProductorAuth.idPequeñoProductor
@@ -63,6 +63,7 @@ export class PequeñoProductorService {
       throw new UnauthorizedException();
     }
     await this.pequeñoProductorRepository.update({ idPequeñoProductor }, body);
+    pequeñoProductor = await this.getPequeñoProductor(idPequeñoProductor);
     return pequeñoProductor;
   }
 
@@ -104,5 +105,24 @@ export class PequeñoProductorService {
       return null;
     }
     return pequeñoProductor;
+  }
+
+  async getPequeñoProductorCultivos(
+    idPequeñoProductor: number,
+  ): Promise<PequeñoProductor> {
+    const pequeñoProductorCultivos =
+      await this.pequeñoProductorRepository.findOne({
+        where: {
+          idPequeñoProductor,
+        },
+        relations: ['cultivos', 'cultivos.vereda'],
+      });
+    if (!pequeñoProductorCultivos) {
+      throw new HttpException(
+        'Pequeño productor no existe en la bd',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return pequeñoProductorCultivos;
   }
 }
