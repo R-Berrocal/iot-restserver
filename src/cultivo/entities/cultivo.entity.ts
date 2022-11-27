@@ -1,3 +1,4 @@
+import { Gasto } from 'src/gasto/entities/gasto.entity';
 import { PequeñoProductor } from 'src/pequeño_productor/entities/pequeño_productor.entity';
 import { Vereda } from 'src/vereda/entities/vereda.entity';
 import {
@@ -6,6 +7,7 @@ import {
   DeleteDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -32,6 +34,9 @@ export class Cultivo {
 
   @ManyToOne(() => Vereda, (vereda) => vereda.cultivos)
   vereda: Vereda;
+
+  @OneToMany(() => Gasto, (gasto) => gasto.cultivo)
+  gastos: Gasto;
 
   @CreateDateColumn()
   creteadAt: Date;

@@ -37,7 +37,7 @@ export class CultivoService {
     return await this.cultivoRepository.save(cultivo);
   }
 
-  async findAll(idPequeñoProductor: number): Promise<Cultivo[]> {
+  async findAll(idPequeñoProductor: number): Promise<Cultivo> {
     const { cultivos } =
       await this.pequeñoProductorService.getPequeñoProductorCultivos(
         idPequeñoProductor,
@@ -53,7 +53,7 @@ export class CultivoService {
       where: {
         idCultivo,
       },
-      relations: ['pequeño_productor', 'vereda'],
+      relations: ['pequeño_productor', 'vereda', 'gastos'],
     });
     if (!cultivo) {
       throw new HttpException(

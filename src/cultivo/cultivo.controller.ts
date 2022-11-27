@@ -42,10 +42,8 @@ export class CultivoController {
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number, @Request() req: any) {
-    const { pequeño_productor, ...cultivo } = await this.cultivoService.findOne(
-      id,
-      req.user.idPequeñoProductor,
-    );
+    const { pequeño_productor, gastos, ...cultivo } =
+      await this.cultivoService.findOne(id, req.user.idPequeñoProductor);
     return cultivo;
   }
 

@@ -33,7 +33,7 @@ export class PequeñoProductor {
   contraseña: string;
 
   @OneToMany(() => Cultivo, (cultivo) => cultivo.pequeño_productor)
-  cultivos: Cultivo[];
+  cultivos: Cultivo;
 
   @CreateDateColumn()
   creteadAt: Date;

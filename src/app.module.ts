@@ -9,6 +9,7 @@ import { DepartamentoModule } from './departamento/departamento.module';
 import { MunicipioModule } from './municipio/municipio.module';
 import { VeredaModule } from './vereda/vereda.module';
 import { CultivoModule } from './cultivo/cultivo.module';
+import { GastoModule } from './gasto/gasto.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { CultivoModule } from './cultivo/cultivo.module';
     MunicipioModule,
     VeredaModule,
     CultivoModule,
+    GastoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

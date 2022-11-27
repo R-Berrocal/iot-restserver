@@ -14,5 +14,6 @@ import { VeredaModule } from 'src/vereda/vereda.module';
   ],
   controllers: [CultivoController],
   providers: [CultivoService],
+  exports: [CultivoService],
 })
 export class CultivoModule {}
