@@ -20,6 +20,9 @@ export class Gasto {
   @Column('integer')
   cantidad: number;
 
+  @Column('text')
+  descripcion: string;
+
   @Column('float')
   costo: number;
 
