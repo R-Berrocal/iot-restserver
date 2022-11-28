@@ -115,7 +115,7 @@ export class PequeñoProductorService {
         where: {
           idPequeñoProductor,
         },
-        relations: ['cultivos', 'cultivos.vereda'],
+        relations: ['cultivos.vereda.municipio.departamento'],
       });
     if (!pequeñoProductorCultivos) {
       throw new HttpException(

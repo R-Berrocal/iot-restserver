@@ -53,7 +53,11 @@ export class CultivoService {
       where: {
         idCultivo,
       },
-      relations: ['pequeño_productor', 'vereda', 'gastos'],
+      relations: [
+        'pequeño_productor',
+        'vereda.municipio.departamento',
+        'gastos',
+      ],
     });
     if (!cultivo) {
       throw new HttpException(
