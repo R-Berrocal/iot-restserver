@@ -55,11 +55,16 @@ export class GastoService {
     return gasto;
   }
 
-  update(id: number, updateGastoDto: UpdateGastoDto) {
-    return `This action updates a #${id} gasto`;
+  async update(idGasto: number, updateGasto: UpdateGastoDto) {
+    let gasto = await this.findOne(idGasto);
+    await this.gastoRepository.update({ idGasto }, updateGasto);
+    gasto = await this.findOne(idGasto);
+    return gasto;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} gasto`;
+  async remove(idGasto: number) {
+    const gasto = await this.findOne(idGasto);
+    await this.gastoRepository.softDelete(idGasto);
+    return gasto;
   }
 }

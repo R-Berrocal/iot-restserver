@@ -3,12 +3,12 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   ParseIntPipe,
   UseGuards,
   Request,
+  Put,
 } from '@nestjs/common';
 import { GastoService } from './gasto.service';
 import { CreateGastoDto } from './dto/create-gasto.dto';
@@ -48,13 +48,18 @@ export class GastoController {
     return this.gastoService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGastoDto: UpdateGastoDto) {
-    return this.gastoService.update(+id, updateGastoDto);
+  @UseGuards(JwtAuthGuard)
+  @Put(':id')
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateGasto: UpdateGastoDto,
+  ) {
+    return this.gastoService.update(id, updateGasto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.gastoService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.gastoService.remove(id);
   }
 }
