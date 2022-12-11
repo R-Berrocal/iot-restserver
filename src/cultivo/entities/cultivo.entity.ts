@@ -1,4 +1,5 @@
 import { Gasto } from 'src/gasto/entities/gasto.entity';
+import { Iot } from 'src/iot/entities/iot.entity';
 import { PequeñoProductor } from 'src/pequeño_productor/entities/pequeño_productor.entity';
 import { Vereda } from 'src/vereda/entities/vereda.entity';
 import {
@@ -37,6 +38,9 @@ export class Cultivo {
 
   @OneToMany(() => Gasto, (gasto) => gasto.cultivo)
   gastos: Gasto;
+
+  @OneToMany(() => Iot, (iot) => iot.cultivo)
+  iots: Iot;
 
   @CreateDateColumn()
   creteadAt: Date;

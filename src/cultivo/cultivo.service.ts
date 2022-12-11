@@ -57,6 +57,7 @@ export class CultivoService {
         'pequeño_productor',
         'vereda.municipio.departamento',
         'gastos',
+        'iots',
       ],
     });
     if (!cultivo) {
@@ -86,6 +87,28 @@ export class CultivoService {
   async remove(idCultivo: number, idPequeñoProductor: number) {
     const cultivo = await this.findOne(idCultivo, idPequeñoProductor);
     await this.cultivoRepository.softDelete(idCultivo);
+    return cultivo;
+  }
+
+  async getCultivo(idCultivo: number) {
+    const cultivo = await this.cultivoRepository.findOne({
+      where: {
+        idCultivo,
+      },
+      relations: [
+        'pequeño_productor',
+        'vereda.municipio.departamento',
+        'gastos',
+        'iots',
+      ],
+    });
+    if (!cultivo) {
+      throw new HttpException(
+        'Cultivo no existe en la bd',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     return cultivo;
   }
 }

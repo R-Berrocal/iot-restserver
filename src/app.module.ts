@@ -10,6 +10,7 @@ import { MunicipioModule } from './municipio/municipio.module';
 import { VeredaModule } from './vereda/vereda.module';
 import { CultivoModule } from './cultivo/cultivo.module';
 import { GastoModule } from './gasto/gasto.module';
+import { IotModule } from './iot/iot.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { GastoModule } from './gasto/gasto.module';
     VeredaModule,
     CultivoModule,
     GastoModule,
+    IotModule,
   ],
   controllers: [AppController],
   providers: [AppService],
