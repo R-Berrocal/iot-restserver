@@ -90,17 +90,12 @@ export class CultivoService {
     return cultivo;
   }
 
-  async getCultivo(idCultivo: number) {
+  async getCultivoIot(idCultivo: number) {
     const cultivo = await this.cultivoRepository.findOne({
       where: {
         idCultivo,
       },
-      relations: [
-        'pequeño_productor',
-        'vereda.municipio.departamento',
-        'gastos',
-        'iots',
-      ],
+      relations: ['iots'],
     });
     if (!cultivo) {
       throw new HttpException(

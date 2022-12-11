@@ -27,9 +27,9 @@ export class IotController {
     return this.iotService.create(idCultivo, createIotDto);
   }
 
-  @Get()
-  findAll() {
-    return this.iotService.findAll();
+  @Get(':idCultivo/cultivo')
+  findAll(@Param('idCultivo', ParseIntPipe) idCultivo: number) {
+    return this.iotService.findAll(idCultivo);
   }
 
   @Get(':id')

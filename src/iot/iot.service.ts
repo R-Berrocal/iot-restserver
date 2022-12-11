@@ -13,15 +13,15 @@ export class IotService {
     private cultivoService: CultivoService,
   ) {}
   async create(idCultivo: number, createIotDto: CreateIotDto) {
-    const cultivo = await this.cultivoService.getCultivo(idCultivo);
+    const cultivo = await this.cultivoService.getCultivoIot(idCultivo);
     const iot = this.iotRepository.create(createIotDto);
     iot.cultivo = cultivo;
 
     return await this.iotRepository.save(iot);
   }
 
-  findAll() {
-    return `This action returns all iot`;
+  findAll(idCultivo: number) {
+    return this.cultivoService.getCultivoIot(idCultivo);
   }
 
   findOne(id: number) {
