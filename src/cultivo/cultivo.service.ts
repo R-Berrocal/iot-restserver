@@ -58,6 +58,7 @@ export class CultivoService {
         'vereda.municipio.departamento',
         'gastos',
         'iots',
+        'informes',
       ],
     });
     if (!cultivo) {

@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CultivoService } from 'src/cultivo/cultivo.service';
 import { Repository } from 'typeorm';
 import { CreateIotDto } from './dto/create-iot.dto';
-import { UpdateIotDto } from './dto/update-iot.dto';
 import { Iot } from './entities/iot.entity';
 
 @Injectable()
@@ -24,15 +23,9 @@ export class IotService {
     return this.cultivoService.getCultivoIot(idCultivo);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} iot`;
-  }
-
-  update(id: number, updateIotDto: UpdateIotDto) {
-    return `This action updates a #${id} iot`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} iot`;
+  remove(iots: Iot[]) {
+    iots.forEach(async (iot) => {
+      await this.iotRepository.softDelete(iot.idIot);
+    });
   }
 }

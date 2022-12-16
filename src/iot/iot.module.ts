@@ -9,5 +9,6 @@ import { CultivoModule } from 'src/cultivo/cultivo.module';
   imports: [TypeOrmModule.forFeature([Iot]), CultivoModule],
   controllers: [IotController],
   providers: [IotService],
+  exports: [IotService],
 })
 export class IotModule {}

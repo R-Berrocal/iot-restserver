@@ -11,6 +11,7 @@ import { VeredaModule } from './vereda/vereda.module';
 import { CultivoModule } from './cultivo/cultivo.module';
 import { GastoModule } from './gasto/gasto.module';
 import { IotModule } from './iot/iot.module';
+import { InformeModule } from './informe/informe.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { IotModule } from './iot/iot.module';
     CultivoModule,
     GastoModule,
     IotModule,
+    InformeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
